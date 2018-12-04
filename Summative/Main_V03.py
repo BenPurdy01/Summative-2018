@@ -10,7 +10,7 @@ pygame.display.set_caption("game")
 screen = pygame.display.set_mode((screen_w,screen_h))
 clock = pygame.time.Clock()
 GREEN = (24,92,26)
-
+"""Following functions are from stack overflow to calculateangles from vectors"""
 def dotproduct(v1, v2):
   return sum((a*b) for a, b in zip(v1, v2))
 
@@ -19,6 +19,7 @@ def length(v):
 
 def angle(v1, v2):
   return math.acos(dotproduct(v1, v2) / (length(v1) * length(v2)))
+"""End of stack overflow"""
 
 class Player():
 
@@ -65,8 +66,8 @@ def main():
                 mousex, mousey = event.pos
                 # build a vector between player position and mouse position
                 moveVector = (mousex-p.x, mousey-p.y)
-                angle_1 = angle(moveVector, (1,0,0))
-                angle_1 = angle_1
+                angle_1 = angle(moveVector, (-1,0,0))
+                angle_1 = (angle_1 * 180)/math.pi
             # only do something if the event is of type QUIT
             if event.type == pygame.QUIT:
                 # change the value to False, to exit the main loop
@@ -104,6 +105,9 @@ def main():
         gun_test = pygame.image.load("M9_v1.png")
         gun_test = pygame.transform.scale(gun_test, (20,16))
         gun_test = pygame.transform.rotate(gun_test, angle_1)
+        if angle_1 > 90:
+          gun_test = pygame.transform.flip(gun_test, 0,1)
+          image = pygame.transform.flip(image, 1,0)
         print angle_1
 ##        if isRunning == True:
 ##            
@@ -115,8 +119,12 @@ def main():
 ##                    screen.blit(currentFrame, (p.x,p.y))
 ##                    frameNum +=1
 ##        else:
-        screen.blit(image, (p.x,p.y))
-        screen.blit(gun_test, (p.x -18,p.y +12))
+        if angle_1 < 90:
+          screen.blit(image, (p.x,p.y))
+          screen.blit(gun_test, (p.x -18,p.y +12))
+        elif angle_1 > 90:
+          screen.blit(image, (p.x,p.y))
+          screen.blit(gun_test, (p.x +18,p.y +12))
         pygame.display.flip()
         clock.tick(60)     
 # run the main function only if this module is executed as the main script

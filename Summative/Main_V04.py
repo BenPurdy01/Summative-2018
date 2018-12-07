@@ -32,6 +32,15 @@ class Zombie():
     def take_dmg(self):
         self.Helth = self.Helth - 1
 
+class Bullet():
+
+    def __init__(self):
+        self.sped = 10
+        self.x = 0
+        self.y = 0
+        self.w = 1
+        self.h = 1
+
 
 # define a main function
 

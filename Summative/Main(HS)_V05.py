@@ -37,25 +37,7 @@ class Zombie():
     def take_dmg(self):
         self.Helth = self.Helth - 1
 
-class Bullet():
 
-    def __init__(self, cords, endpoint):
-        self.time = 0
-        self.sped = 10
-        #make so starts not top left player
-        self.x = cords[0]
-        self.y = cords[1]
-        self.w = 1
-        self.h = 1
-        self.endx = endpoint[0]
-        self.endy = endpoint[1]
-        self.m = ((self.endy - self.y) / float(self.endx - self.x))
-
-    def move(self):
-        self.time += 1
-        self.x += self.sped
-        self.y += self.m * self.sped
-        return (self.x, self.y)
         
 
 
@@ -66,18 +48,20 @@ def main():
     zed = Zombie()
     # define a variable to control the main loop
     running = True
+    
     bullets = []
     # main loop
     while running:
         screen.fill(GREEN)
+        hit_zed = False
         # event handling, gets all event from the eventqueue
         for event in pygame.event.get():
             if event.type == pygame.MOUSEMOTION:
                 mousex, mousey = event.pos
                 angle_1 = math.degrees(math.atan2(p.y-mousey, p.x-mousex))+180
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                #not ben
-                bullets.append(Bullet((p.x,p.y), (mousex,mousey)) )
+                if mousex >= zed.x and mousey >= zed.y and mousex <= (zed.x + 34) and mousey <= (zed.y + 56):
+                    hit_zed = True
                 
                 print (mousex,mousey)
                 print "button pressed"
@@ -108,13 +92,6 @@ def main():
                 p.y += p.sped
             elif (p.y + 56) >= screen_h:
                 p.y = p.y -10
-
-        #not ben
-        for i in range(len(bullets)):
-            pygame.draw.line(screen, RED, (bullets[i].x, bullets[i].y), (bullets[i].move()), 5)
-            #this is arbitrary. Instead, pop the bullet if it collides with an enemy or if it goes out of the screen
-            if bullets[i].time >= 20:
-                bullets.pop(i)
         
 
         image = pygame.image.load("player_noArm.png")
@@ -123,6 +100,8 @@ def main():
         gun_test = pygame.transform.scale(gun_test, (20,16))
         zombie = pygame.image.load("zombie_0.png")
         zombie = pygame.transform.scale(zombie, (34,56))
+        zombie_h = pygame.image.load("Zombie_hit.png")
+        zombie_h = pygame.transform.scale(zombie_h, (34,56))
         if angle_1 > 270 or angle_1 < 90:
           gun_test = pygame.transform.rotate(gun_test, angle_1)
           gun_test = pygame.transform.flip(gun_test, 1,0)
@@ -146,7 +125,10 @@ def main():
         else:
           screen.blit(image, (p.x,p.y))
           screen.blit(gun_test, (p.x +18,p.y +12))
-        screen.blit(zombie, (zed.x,zed.y))
+        if hit_zed == False:
+            screen.blit(zombie, (zed.x,zed.y))
+        elif hit_zed == True:
+            screen.blit(zombie_h, (zed.x,zed.y))
         pygame.mouse.set_visible( False ) 
         screen.blit(CH, (mousex, mousey))
         pygame.display.flip()

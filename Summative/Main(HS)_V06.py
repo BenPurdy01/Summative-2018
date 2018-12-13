@@ -30,30 +30,57 @@ class Player():
 
 class Zombie():
 
-    def __init__(self):
-        self.x = int
-        self.y = int
+    def __init__(self,startX,startY):
+        self.x = startY
+        self.y = startX
         self.sped = .5
         self.Helth = 5
         self.alive = True
         self.attack_wait = time.time()
 
+    def move(self,plyr):
+        if plyr.x > self.x:
+            self.x+=self.sped
+        elif plyr.x < self.x:
+            self.x-=self.sped
+        if plyr.y > self.y:
+            self.y+=self.sped
+        elif plyr.y < self.y:
+            self.y-=self.sped
+
+    def attack(self,plyr):
+        if plyr.x == self.x and plyr.y == self.y and time.time()-self.attack_wait >= 1:
+            self.attack_wait = time.time()
+            plyr.take_dmg()
+            print plyr.Helth
+
+    
     def take_dmg(self):
         self.Helth = self.Helth - 1
+
+    def draw(self,hit,z,z_h):
+        if hit == False:
+            screen.blit(z, (self.x,self.y))
+        elif hit == True:
+            screen.blit(z_h, (self.x,self.y))
+            self.take_dmg()
+            print self.Helth
 
 
         
 
 
-# define a main function
 
+"""Main Function"""
 def main():    
     p= Player()
-    zed = Zombie()
-    # define a variable to control the main loop
+    """running make the loop go"""
+    zed_list = []
     running = True
-    zed.x = random.randint(0,screen_w)
-    zed.y = random.randint(0,screen_h)
+    for we in range(10):
+        temp_x = random.randint(0,screen_w)
+        temp_y = random.randint(0,screen_h)
+        zed_list.append(Zombie(temp_x,temp_y))
     # main loop
     while running:
         screen.fill(GREEN)
@@ -64,8 +91,9 @@ def main():
                 mousex, mousey = event.pos
                 angle_1 = math.degrees(math.atan2(p.y-mousey, p.x-mousex))+180
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if mousex >= zed.x and mousey >= zed.y and mousex <= (zed.x + 34) and mousey <= (zed.y + 56):
-                    hit_zed = True
+                for zed in zed_list:
+                    if mousex >= zed.x and mousey >= zed.y and mousex <= (zed.x + 34) and mousey <= (zed.y + 56):
+                        hit_zed = True
                 
                 print (mousex,mousey)
                 print "button pressed"
@@ -117,27 +145,13 @@ def main():
           gun_test = pygame.transform.flip(gun_test, 1,1)
         CH = pygame.image.load("crosshair.png")
         CH = pygame.transform.scale(CH, (10,10))
-        if zed.alive == True:
-            if p.x > zed.x:
-                zed.x+=zed.sped
-            elif p.x < zed.x:
-                zed.x-=zed.sped
-            if p.y > zed.y:
-                zed.y+=zed.sped
-            elif p.y < zed.y:
-                zed.y-=zed.sped
-            if p.x == zed.x and p.y == zed.y and time.time()-zed.attack_wait >= 1:
-                zed.attack_wait = time.time()
-                p.take_dmg()                
-                print p.Helth
-            if hit_zed == False:
-                screen.blit(zombie, (zed.x,zed.y))
-            elif hit_zed == True:
-                screen.blit(zombie_h, (zed.x,zed.y))
-                zed.take_dmg()
-                print zed.Helth
-            if zed.Helth <= 0:
-                zed.alive = False
+        for i in range(len(zed_list)):
+            if zed_list[i].alive == True:
+                zed_list[i].move(p)
+                zed_list[i].attack(p)    
+                zed_list[i].draw(hit_zed,zombie,zombie_h)
+                if zed_list[i].Helth <= 0:
+                    zed_list[i].alive = False
         else:
             ()
         if angle_1 < 270 or angle_1 > 90:

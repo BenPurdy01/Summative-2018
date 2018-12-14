@@ -36,6 +36,7 @@ class Zombie():
         self.sped = .5
         self.Helth = 5
         self.alive = True
+        self.isHit = False
         self.attack_wait = time.time()
 
     def move(self,plyr):
@@ -54,25 +55,25 @@ class Zombie():
             plyr.take_dmg()
             print plyr.Helth
 
-    
+
     def take_dmg(self):
         self.Helth = self.Helth - 1
 
-    def draw(self,hit,z,z_h):
-        if hit == False:
+    def draw(self,z,z_h):
+        if self.isHit == False:
             screen.blit(z, (self.x,self.y))
-        elif hit == True:
+        elif self.isHit == True:
             screen.blit(z_h, (self.x,self.y))
             self.take_dmg()
             print self.Helth
 
 
-        
+
 
 
 
 """Main Function"""
-def main():    
+def main():
     p= Player()
     """running make the loop go"""
     zed_list = []
@@ -84,17 +85,18 @@ def main():
     # main loop
     while running:
         screen.fill(GREEN)
-        hit_zed = False
+        for z in range(len(zed_list)):
+            zed_list[z].isHit = False
         # event handling, gets all event from the eventqueue
         for event in pygame.event.get():
             if event.type == pygame.MOUSEMOTION:
                 mousex, mousey = event.pos
                 angle_1 = math.degrees(math.atan2(p.y-mousey, p.x-mousex))+180
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                for zed in zed_list:
-                    if mousex >= zed.x and mousey >= zed.y and mousex <= (zed.x + 34) and mousey <= (zed.y + 56):
-                        hit_zed = True
-                
+                for z in range(len(zed_list)):
+                    if mousex >= zed_list[z].x and mousey >= zed_list[z].y and mousex <= (zed_list[z].x + 34) and mousey <= (zed_list[z].y + 56):
+                        zed_list[z].isHit = True
+
                 print (mousex,mousey)
                 print "button pressed"
             # only do something if the event is of type QUIT
@@ -124,7 +126,7 @@ def main():
                 p.y += p.sped
             elif (p.y + 56) >= screen_h:
                 p.y = p.y -10
-        
+
 
         image = pygame.image.load("player_noArm.png")
         image = pygame.transform.scale(image, (16,56))
@@ -148,8 +150,8 @@ def main():
         for i in range(len(zed_list)):
             if zed_list[i].alive == True:
                 zed_list[i].move(p)
-                zed_list[i].attack(p)    
-                zed_list[i].draw(hit_zed,zombie,zombie_h)
+                zed_list[i].attack(p)
+                zed_list[i].draw(zombie,zombie_h)
                 if zed_list[i].Helth <= 0:
                     zed_list[i].alive = False
         else:
@@ -165,13 +167,12 @@ def main():
         if p.alive == False:
             screen.blit(G_O, (((screen_w/2)-50), ((screen_h/2)-50)))
             running = False
-        pygame.mouse.set_visible( False ) 
+        pygame.mouse.set_visible( False )
         screen.blit(CH, (mousex, mousey))
         pygame.display.flip()
-        clock.tick(60)     
+        clock.tick(60)
 # run the main function only if this module is executed as the main script
 # (if you import this as a module then nothing is executed)
 if __name__=="__main__":
     # call the main function
     main()
-

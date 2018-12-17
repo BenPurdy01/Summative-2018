@@ -138,6 +138,10 @@ def main():
         zombie_h = pygame.transform.scale(zombie_h, (34,56))
         G_O = pygame.image.load("G_O.png")
         G_O = pygame.transform.scale(G_O, (106,55))
+        ammo_counter = pygame.image.load("ammo_counter.png")
+        ammo_counter = pygame.transform.scale(ammo_counter, (24, 42))
+        HP_Bar = pygame.image.load("HP_bar.png")
+        HP_Bar = pygame.transform.scale(HP_Bar, (114, 18))
         if angle_1 > 270 or angle_1 < 90:
           gun_test = pygame.transform.rotate(gun_test, angle_1)
           gun_test = pygame.transform.flip(gun_test, 1,0)
@@ -162,13 +166,15 @@ def main():
         else:
           screen.blit(image, (p.x,p.y))
           screen.blit(gun_test, (p.x +18,p.y +12))
-        if p.Helth == 0:
+        if p.Helth <= 0:
             p.alive = False
         if p.alive == False:
             screen.blit(G_O, (((screen_w/2)-50), ((screen_h/2)-50)))
             running = False
         pygame.mouse.set_visible( False )
         screen.blit(CH, (mousex, mousey))
+        screen.blit(ammo_counter,(120,450))
+        screen.blit(HP_Bar, (0,450))
         pygame.display.flip()
         clock.tick(60)
 # run the main function only if this module is executed as the main script

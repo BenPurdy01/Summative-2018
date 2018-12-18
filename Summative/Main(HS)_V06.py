@@ -78,13 +78,16 @@ def main():
     """running make the loop go"""
     zed_list = []
     running = True
-    for we in range(10):
-        temp_x = random.randint(0,screen_w)
-        temp_y = random.randint(0,screen_h)
-        zed_list.append(Zombie(temp_x,temp_y))
+       
     # main loop
     while running:
         screen.fill(GREEN)
+        if len(zed_list) == 0:
+            for we in range(10):
+                temp_x = random.randint(0,screen_w)
+                temp_y = random.randint(0,screen_h)
+                zed_list.append(Zombie(temp_x,temp_y))
+
         for z in range(len(zed_list)):
             zed_list[z].isHit = False
         # event handling, gets all event from the eventqueue
@@ -151,15 +154,17 @@ def main():
           gun_test = pygame.transform.flip(gun_test, 1,1)
         CH = pygame.image.load("crosshair.png")
         CH = pygame.transform.scale(CH, (10,10))
+        new_zed_list = []
         for i in range(len(zed_list)):
             if zed_list[i].alive == True:
                 zed_list[i].move(p)
                 zed_list[i].attack(p)
                 zed_list[i].draw(zombie,zombie_h)
+                new_zed_list.append(zed_list[i])
                 if zed_list[i].Helth <= 0:
                     zed_list[i].alive = False
-        else:
-            ()
+                    
+        zed_list = new_zed_list            
         if angle_1 < 270 or angle_1 > 90:
           screen.blit(image, (p.x,p.y))
           screen.blit(gun_test, (p.x - 2,p.y +12))
@@ -175,6 +180,8 @@ def main():
         screen.blit(CH, (mousex, mousey))
         screen.blit(ammo_counter,(120,450))
         screen.blit(HP_Bar, (0,450))
+        rect_arg = (30,456,(4.2*p.Helth),12)
+        pygame.draw.rect(screen, (23, 229, 16), rect_arg,0)
         pygame.display.flip()
         clock.tick(60)
 # run the main function only if this module is executed as the main script

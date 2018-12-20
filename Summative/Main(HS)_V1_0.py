@@ -79,7 +79,7 @@ def main():
     zed_list = []
     running = True
     game_font = pygame.font.SysFont("pixelmix Regular", 12)
-    # main loop
+    """The Main loop"""
     while running:
         screen.fill(GREEN)
         if len(zed_list) < 25:
@@ -110,10 +110,8 @@ def main():
                                 if event.key == pygame.K_ESCAPE:
                                     exit = True
                         if exit:
-                            break
-                                    
-                        
-            # only do something if the event is of type QUIT
+                            break            
+            
             if event.type == pygame.QUIT:
                 # change the value to False, to exit the main loop
                 running = False
@@ -141,12 +139,7 @@ def main():
                 p.y += p.sped
             elif (p.y + 56) >= screen_h:
                 p.y = p.y -10
-        #if pressedkeys[pygame.K_ESCAPE]:
-         #   is_pause = True
-          #  while is_pause == True:
-           #     screen.blit(pause_display, (230, 250))
-            #    if pressedkeys[pygame.K_ESCAPE]:
-             #       is_pause = False
+
                 
 
 

@@ -79,8 +79,11 @@ def main():
     """running make the loop go"""
     zed_list = []
     spawned_list = []
+    ded_list = []
     running = True
     game_font = pygame.font.SysFont("pixelmix Regular", 12)
+    temp = True
+    
     """The Main loop"""
     while running:
         max_zeds = 10+(5*wave_num) 
@@ -182,11 +185,22 @@ def main():
                 if zed_list[i].Helth <= 0:
                     zed_list[i].alive = False
                     p.Score += 10
+                    ded_list.append(zed_list[i])
         zed_list = new_zed_list
-        if len(spawned_list) == max_zeds:
-            p.Score + max_zeds
-            wave_num += 1
-            spawned_list = []
+        
+        """Wave control"""
+        if len(ded_list) == max_zeds and temp == True:
+            temp = False
+            wave_wait = time.time()
+        if temp == False:            
+            if time.time() - wave_wait >= 3:
+                print "1"
+                p.Score += max_zeds
+                wave_num += 1
+                spawned_list = []
+                ded_list = []
+                wave_wait = time.time()
+                temp = True
         if angle_1 < 270 or angle_1 > 90:
           screen.blit(image, (p.x,p.y))
           screen.blit(gun_test, (p.x - 2,p.y +12))

@@ -91,11 +91,6 @@ class vendor(Entity):
         Entity.__init__(self)
         self.x = spawnX
         self.y = spawnY
-
-class ven_inv(Entity,vendor):
-
-    def __init__(self):
-        Entity.__init__(self)
         self.Dual_isBuy = False
         self.Shotgun_isBuy = False
         self.AK_isBuy = False
@@ -110,12 +105,24 @@ class ven_inv(Entity,vendor):
         self.M16_price = 475
         self.DB_price = 350
         self.Revolver_price = 250
-
+        self.arAmmo_price = 175
+        self.shotAmmo = 125
+        self.pAmmo = 75
     
     
         
 
+def shop_screen(plyr):
+    shop_arg = (100,100,300,300)
+    pygame.draw.rect(screen, (0, 0, 0), shop_arg,0)
+    merchant = pygame.image.load("merchant_v1.png")
+    merchant = pygame.transform.scale(merchant, (24,56))
+    merchant_open = pygame.image.load("merchant_v1_open.png")
+    merchant_open = pygame.transform.scale(merchant_open, (36,56))
+    screen.blit(merchant_open, (50,100))
 
+                                           
+    
 
 
     

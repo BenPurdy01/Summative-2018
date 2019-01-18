@@ -39,6 +39,15 @@ class Player(Entity):
         self.Dosh = 0
         self.alive = True
         self.curWep = 1
+        self.wepOwn_2 = False
+        self.wepOwn_3 = False
+        self.wepOwn_4 = False
+        self.wepOwn_5 = False
+        self.wepOwn_6 = False
+        self.wepOwn_7 = False
+        self.wepAmmo_2 = 0
+        self.wepAmmo_3 = 0
+        self.wepAmmo_4 = 0
 
     def take_dmg(self):
         self.Helth = self.Helth - 1
@@ -121,6 +130,19 @@ def shop_screen(plyr):
     merchant_open = pygame.transform.scale(merchant_open, (36,56))
     screen.blit(merchant_open, (50,100))
 
+    button1 = (110,110,145,25)
+
+    mouse_location = (0,0)
+    mouse_button = None
+    """Matthew started this"""
+    while True:
+        for event in pygame.event.get():
+            pass
+        mouse_location = pygame.mouse.get_pos()
+        mouse_button = pygame.mouse.get_pressed()
+
+        if mouse_location[0] >= button1[0] and mouse_location[0] <= button1[0] + button1[2] and mouse_location[1] >= button1[1] and mouse_location[1] <= button1[1] + button1[3]:
+            print "test"
                                            
     
 
@@ -219,9 +241,9 @@ def main():
                 p.y = p.y -10
         if pressedkeys[pygame.K_1]:
             p.curWep = 1
-        if pressedkeys[pygame.K_2]:
+        if pressedkeys[pygame.K_2] and p.wepOwn_2 == True:
             p.curWep = 2
-        if pressedkeys[pygame.K_3]:
+        if pressedkeys[pygame.K_3] and p.wepOwn_3 == True:
             p.curWep = 3
 
                 
